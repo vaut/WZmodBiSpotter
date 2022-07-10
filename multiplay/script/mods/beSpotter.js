@@ -1,7 +1,7 @@
 include("multiplay/script/mods/geometry.js");
 namespace("biSpotter_");
 const PAUSE = 5*1000;
-const COUNT = 30;
+const COUNT = 50;
 
 var topology = [
 	{op: 2, reflection: "axial"},
@@ -21,7 +21,9 @@ function spotterUpdate()
 		if (playerMap[playnum] && playerMap[playnum][x][y] != Infinity)
 		{
 			reachable.push(playnum);
-			debug(playnum);
+			const opPos = playerData[playnum].position;
+			const opNum =  posToNum(opPos);
+			reachable.push(opNum);
 		}
 	}
 	if (reachable.length > 0)
@@ -30,10 +32,9 @@ function spotterUpdate()
 		{
 			if (!reachable.includes(playnum))
 			{
-				addSpotter(x, y, playnum, 3*128, 0, gameTime+PAUSE*COUNT);
+				addSpotter(x, y, playnum, 4*128, 0, gameTime+PAUSE*COUNT);
 				const {x:x2,y:y2} = transform(x,y);
-				addSpotter(x2, y2, playnum, 3*128, 0, gameTime+PAUSE*COUNT);
-				debug("x",x,"y",y,"x2",x2,"y2",y2);
+				addSpotter(x2, y2, playnum, 4*128, 0, gameTime+PAUSE*COUNT);
 			}
 		}
 	}
@@ -78,8 +79,9 @@ function transform(x,y)
 			break;
 		}
 	}
-	const reflection = topology[player].reflection;
-	const player2 = topology[player].op;
+	const pos = playerData[player].position;
+	const reflection = topology[pos].reflection;
+	const player2 = posToNum(topology[pos].op);
 	let x2, y2;
 	if (reflection === "centr")
 	{
@@ -107,4 +109,9 @@ function transform(x,y)
 function biSpotter_eventGameInit()
 {
 	setTimer("spotterUpdate", PAUSE);
+}
+
+function posToNum(pos)
+{
+	return playerData.findIndex(p => {return p.position == topology[pos].op;});
 }
