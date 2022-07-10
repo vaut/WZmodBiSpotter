@@ -5,10 +5,7 @@ var newCells = new Queue();
 
 for (let playnum = 0; playnum < maxPlayers; ++playnum)
 {
-	if (playerData[playnum].position)
-	{
-		playerMap[playnum] = fillingMap(startPositions[playnum], lim = Infinity);
-	}
+	playerMap[playnum] = fillingMap(startPositions[playnum], lim = Infinity);
 }
 //debug(JSON.stringify(playerMap));
 
